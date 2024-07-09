@@ -1,7 +1,10 @@
 <script setup>
-  const something = ref('Something');
+  const title = ref('Restaurant cashier, Earnings history and Staff and menu items administration.');
 </script>
 
 <template>
-  <h1>{{something}}</h1>
+  <div class="mt-20">
+    <img src="/public/restaurant.svg" alt="restaurant" class="w-[20rem] mx-auto">
+    <h1 class="text-center">{{title}}</h1>
+  </div>
 </template>
