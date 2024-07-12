@@ -53,7 +53,7 @@
             </NuxtLink>
         </div>
     
-        <nav class="hidden md:block">
+        <nav class="hidden lg:block">
             <ul class="flex gap-10">
                 <li 
                     v-for="item in navItems"
@@ -69,7 +69,7 @@
         </nav>
 
         <!-- open menu -->
-        <Icon name="mdi:menu" color="black" size="30px" class="cursor-pointer md:hidden" @click="openMenu"/>
+        <Icon name="mdi:menu" color="black" size="30px" class="cursor-pointer lg:hidden" @click="openMenu"/>
         <!-- open menu -->
 
         <div 
