@@ -1,5 +1,5 @@
 <script setup>
-  const title = ref('Restaurant cashier, Earnings history and Staff and menu items administration.');
+  const title = ref('Restaurant cashier, Earnings history, Staff and menu items administration.');
 </script>
 
 <template>
