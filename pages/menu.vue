@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { ref, onMounted, computed } from 'vue';
   import {formatCurrency} from '../lib/utils.ts'
   import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -7,9 +7,17 @@
   import Search from '@/components/Search';
   import DescriptionDialog from '@/components/DescriptionDialog';
 
-  const items = ref([]);
-  const searchInput = ref('');
-  const selectedCategory = ref('');
+  interface Item {
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+  }
+
+  const items = ref<Item[]>([]);
+  const searchInput = ref<string>('');
+  const selectedCategory = ref<string>('');
+
 
   onMounted(async () => {
     try {
