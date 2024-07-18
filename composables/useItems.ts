@@ -5,6 +5,7 @@ interface Item {
   description: string;
   price: number;
   category: string;
+  _id: string
 }
 
 export const useItems = () => {
