@@ -5,43 +5,10 @@
   import {formatCurrency} from '../lib/utils'
 
   import {useItems} from '../composables/useItems';
-
+  import {useCashier} from '../composables/useCashier';
+  
   const { searchInput, selectedCategory, filteredItems, uniqueCategories } = useItems();
-
-  interface Item {
-  name: string;
-  description: string;
-  price: number;
-  _id: string;
-  category: string;
-  quantity?: number;
-  }
-
-  //cashier
-  const sellArray = ref<Item[]>([]);
-
-  const addToTicket = (item: Item) => {
-    // Already exist on the ticket?
-    const ticketItem = sellArray.value.find(object => object._id === item._id);
-
-    if (ticketItem) {
-      ticketItem.quantity = (ticketItem.quantity ?? 0) + 1; //because is possible undefined
-
-    } else {
-      // Item is not in the cart, add it with quantity 1
-      const newItem = { ...item, quantity: 1 };
-      sellArray.value.push(newItem);
-    }
-  };
-
-  const removeFromTicket = (itemID: string) => {
-    sellArray.value = sellArray.value.filter(item => item._id !== itemID);
-  }
-
-  // Computed property to calculate total to pay
-  const totalToPay = computed(() => {
-    return sellArray.value.reduce((total, item) => total + item.price * (item.quantity?? 1), 0);
-  });
+  const { addToTicket, removeFromTicket, totalToPay, sellArray, registerSale } = useCashier();
 
 </script>
 
@@ -117,7 +84,7 @@
 
               <!-- Botón "Registrar Venta" -->
           <div class="flex justify-center mt-6">
-            <Button type="button" class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-md">
+            <Button @click="registerSale()" type="button" class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-md">
               Register Sale
             </Button>
           </div>
