@@ -13,6 +13,7 @@ interface Item {
 export const useCashier = () => {
   //cashier
   const sellArray = ref<Item[]>([]);
+  const loading = ref<boolean>(false);
 
   const { toast } = useToast();
   const { saveTicket } = useTickets();
@@ -51,6 +52,7 @@ export const useCashier = () => {
     };
 
     if(confirm('Ticket will be saved in the Database')){
+      loading.value = true;
       try {
         await saveTicket(ticket);
         // clear the sellArray after successful save
@@ -68,6 +70,8 @@ export const useCashier = () => {
           description: error,
           variant: 'destructive'
         });
+      }finally{
+        loading.value = false;
       }
     }
   };
@@ -77,6 +81,7 @@ export const useCashier = () => {
         removeFromTicket,
         totalToPay,
         sellArray,
-        registerSale
+        registerSale,
+        loading
     };
   };

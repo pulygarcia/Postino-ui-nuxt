@@ -12,8 +12,10 @@ export const useItems = () => {
   const items = ref<Item[]>([]);
   const searchInput = ref<string>('');
   const selectedCategory = ref<string>('');
+  const loading = ref<boolean>(false);
 
   onMounted(async () => {
+    loading.value = true;
     try {
       const response = await fetch('http://localhost:4000/api/menu', {
         method: 'GET',
@@ -25,6 +27,8 @@ export const useItems = () => {
       items.value = data.items;
     } catch (error) {
       console.error('Error fetching data:', error);
+    }finally{
+      loading.value = false;
     }
   });
 
@@ -46,6 +50,7 @@ export const useItems = () => {
     searchInput,
     selectedCategory,
     filteredItems,
-    uniqueCategories
+    uniqueCategories,
+    loading
   };
 };

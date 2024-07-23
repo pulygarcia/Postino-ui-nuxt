@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup>
   import {useTickets} from '../composables/useTickets';
   import {formatDate} from '../lib/utils'
 
-  const {tickets} = useTickets();
+  const {tickets, loading} = useTickets();
 </script>
 
 <template>
@@ -11,7 +11,10 @@
       <div>
         <DatePicker />
         <h1 class="order-2 lg:order-1 mt-5">Earnings history data</h1>
-        <p v-for="ticket in tickets">
+        <div v-if="loading" class="flex justify-center mt-28">
+          <Loader />
+        </div>
+        <p v-else v-for="ticket in tickets">
           {{ formatDate(ticket.date) }}
         </p>
       </div>

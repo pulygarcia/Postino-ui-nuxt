@@ -8,14 +8,15 @@
   import {useCashier} from '../composables/useCashier';
   
   const { searchInput, selectedCategory, filteredItems, uniqueCategories } = useItems();
-  const { addToTicket, removeFromTicket, totalToPay, sellArray, registerSale } = useCashier();
+  const { addToTicket, removeFromTicket, totalToPay, sellArray, registerSale, loading } = useCashier();
 
 </script>
 
 <template>
   <Container>
     <div class="grid lg:grid-cols-2 mt-10 gap-6">
-      <div class="space-y-3">
+
+      <div v-if="filteredItems.length" class="space-y-3">
         <Search>
           <Input id="search" type="text" placeholder="Search..." class="pl-10" v-model="searchInput" />
         </Search>
@@ -60,11 +61,19 @@
         </Table>
       </div>
 
+      <div v-else class="mt-28 mx-auto">
+        <Loader />
+      </div>
+
       <!-- CASHIER -->
       <div class="bg-gray-100 p-2 rounded-md">
         <h1 class="text-lg md:text-2xl font-semibold">Cashier</h1>
 
-        <div v-if="sellArray.length">
+        <div v-if="loading" class="flex justify-center mt-28">
+          <Loader />
+        </div>
+
+        <div v-else-if="sellArray.length">
           <article v-for="item in sellArray" :key="item._id" class="flex items-center justify-between mt-5 p-1 rounded-md">
             <p class="w-36 truncate">{{ item.name }}</p>
             <p class="font-semibold">{{ formatCurrency(item.price) }}</p>

@@ -25,7 +25,7 @@ const df = new DateFormatter('en-US', {
 const formSchema = toTypedSchema(z.object({
   dob: z
     .string()
-    .refine(v => v, { message: 'A date of birth is required.' }),
+    .refine(v => v, { message: 'A date is required.' }),
 }))
 
 const placeholder = ref()
@@ -43,7 +43,7 @@ const value = computed({
 })
 
 const onSubmit = handleSubmit((values) => {
-  console.log('Selected Date');
+  console.log('Selected Date: ' + values.dob);
 })
 </script>
 

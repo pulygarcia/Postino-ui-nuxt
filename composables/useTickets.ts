@@ -7,9 +7,10 @@ interface Ticket {
 
 export const useTickets = () => {
     const tickets = ref([]);
-      
+    const loading = ref<boolean>(false);
 
     onMounted(async () => {
+      loading.value = true;
       try {
         const response = await fetch('http://localhost:4000/api/tickets', {
           method: 'GET',
@@ -23,11 +24,14 @@ export const useTickets = () => {
 
       } catch (error) {
         console.error('Error fetching data:', error);
+      }finally{
+        loading.value = false;
       }
     });
 
 
     const saveTicket = async (ticket:Ticket) => {
+      loading.value = true;
         try {
             await fetch('http://localhost:4000/api/tickets', {
               method: 'POST',
@@ -41,11 +45,14 @@ export const useTickets = () => {
     
           } catch (error) {
             console.error('Error fetching data:', error);
+          }finally{
+            loading.value = false;
           }
     }
   
     return {
         tickets,
-        saveTicket
+        saveTicket,
+        loading
     };
   };
