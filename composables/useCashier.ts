@@ -45,7 +45,7 @@ export const useCashier = () => {
   const registerSale = async () => {
     //get needed data and make an object as ticket to save it
     const ticket = {
-      items: sellArray.value.map(item => item._id),
+      items: sellArray.value.map(item => ({ id: item._id, quantity: item.quantity })),
       date: new Date().toISOString(),
       collected: totalToPay.value,
       user: '60d21b4667d0d8992e610c8a',

@@ -1,5 +1,5 @@
 interface Ticket {
-    items: string[];
+    items: object[];
     date: string;
     collected: number;
     user: string;

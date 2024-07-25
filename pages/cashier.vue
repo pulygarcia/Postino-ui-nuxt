@@ -7,7 +7,7 @@
   import {useItems} from '../composables/useItems';
   import {useCashier} from '../composables/useCashier';
   
-  const { searchInput, selectedCategory, filteredItems, uniqueCategories } = useItems();
+  const { searchInput, selectedCategory, filteredItems, uniqueCategories, loading:loadingItems } = useItems();
   const { addToTicket, removeFromTicket, totalToPay, sellArray, registerSale, loading } = useCashier();
 
 </script>
@@ -15,8 +15,7 @@
 <template>
   <Container>
     <div class="grid lg:grid-cols-2 mt-10 gap-6">
-
-      <div v-if="filteredItems.length" class="space-y-3">
+      <div class="space-y-3">
         <Search>
           <Input id="search" type="text" placeholder="Search..." class="pl-10" v-model="searchInput" />
         </Search>
@@ -26,43 +25,46 @@
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem v-for="category in uniqueCategories" :value="category">
+              <SelectItem v-for="category in uniqueCategories" :key="category" :value="category">
                 {{ category }}
               </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
 
-        <Table>
-          <TableCaption>A list of items of the menu.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Price</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow v-for="item in filteredItems" :key="item._id">
-              <TableCell class="font-medium">
-                {{ item.name }}
-              </TableCell>
+        <div v-if="loadingItems" class="flex justify-center pt-36">
+          <Loader />
+        </div>
 
-              <TableCell class="font-medium">
-                {{ formatCurrency(item.price) }}
-              </TableCell>
-
-              <TableCell class="text-right">
-                <Button @click="addToTicket(item)" type="button" class="bg-green-600 hover:bg-green-800">
-                  <Icon name="mdi:plus-box" color="black"/>
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-
-      <div v-else class="mt-28 mx-auto">
-        <Loader />
+        <div v-else>
+          <Table v-if="filteredItems.length">
+            <TableCaption>A list of items of the menu.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Price</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="item in filteredItems" :key="item._id">
+                <TableCell class="font-medium">
+                  {{ item.name }}
+                </TableCell>
+                <TableCell class="font-medium">
+                  {{ formatCurrency(item.price) }}
+                </TableCell>
+                <TableCell class="text-right">
+                  <Button @click="addToTicket(item)" type="button" class="bg-green-600 hover:bg-green-800">
+                    <Icon name="mdi:plus-box" color="black" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <div v-else class="mt-28 mx-auto">
+            <p class="text-red-700 font-semibold">Item not found</p>
+          </div>
+        </div>
       </div>
 
       <!-- CASHIER -->
@@ -79,7 +81,7 @@
             <p class="font-semibold">{{ formatCurrency(item.price) }}</p>
             <Input type="number" min="1" max="50" class="pl-10 w-26" :value="item.quantity" v-model="item.quantity" />
             <Button @click="removeFromTicket(item._id)" type="button" class="bg-red-600 hover:bg-red-800">
-                <Icon name="mdi:trash" color="black"/>
+              <Icon name="mdi:trash" color="black" />
             </Button>
           </article>
 
@@ -91,7 +93,7 @@
             <p class="text-2xl font-bold">{{ formatCurrency(totalToPay) }}</p>
           </div>
 
-              <!-- Botón "Registrar Venta" -->
+          <!-- Botón "Registrar Venta" -->
           <div class="flex justify-center mt-6">
             <Button @click="registerSale()" type="button" class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-md">
               Register Sale

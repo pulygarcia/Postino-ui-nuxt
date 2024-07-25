@@ -12,5 +12,5 @@ export const formatCurrency = (amount:Number) => Number(amount).toLocaleString('
 })
 
 export function formatDate(isoDate:string) {
-  return format(new Date(isoDate), 'dd/MM/yyyy HH:mm:ss');
+  return format(new Date(isoDate), 'dd-MM-yyyy');
 }
