@@ -62,7 +62,7 @@
             </TableBody>
           </Table>
           <div v-else class="mt-28 mx-auto">
-            <p class="text-red-700 font-semibold">Item not found</p>
+            <p class="text-red-700 font-semibold">Items not found</p>
           </div>
         </div>
       </div>

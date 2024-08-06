@@ -4,25 +4,61 @@
     import * as z from 'zod'
     import {FormControl,FormDescription,FormField,FormItem,FormLabel,FormMessage} from '@/components/ui/form'
     import { Input } from '@/components/ui/input'
+    import { useToast } from '@/components/ui/toast/use-toast'
+
+    const { toast } = useToast();
 
     const formSchema = toTypedSchema(z.object({
-        username: z.string().min(2).max(50),
-        password: z.string().min(6).max(25).trim(),
+        userName: z.string().min(2).max(50),
+        password: z.string().min(8).max(25).trim(),
     }))
 
     const form = useForm({
         validationSchema: formSchema,
     })
 
-    const onSubmit = form.handleSubmit((values) => {
-        console.log(values);
+    const onSubmit = form.handleSubmit(async (values) => {
+        //console.log(values);
+      try {
+        const response = await fetch('http://localhost:4000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values)
+        });
+
+        const data = await response.json();
+
+        //send to the catch in order to show an error toast
+        if (!response.ok) {
+          throw new Error(data.msg);
+        }
+
+        //console.log(data);
+
+        toast({
+          title: 'Success',
+          description: 'Welcome ' + values.userName,
+        });
+
+        localStorage.setItem('auth_jwt', data.jwt);
+
         form.resetForm();
+
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive'
+        });
+      }
     })
 </script>
 
 <template>
     <form class="w-2/3 space-y-6 mt-10" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="username">
+    <FormField v-slot="{ componentField }" name="userName">
       <FormItem>
         <FormLabel>Username</FormLabel>
         <FormControl>
