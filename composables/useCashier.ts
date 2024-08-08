@@ -1,4 +1,5 @@
 import { useToast } from '@/components/ui/toast/use-toast'
+import { useAuth } from './useAuth';
 
 
 interface Item {
@@ -16,6 +17,7 @@ export const useCashier = () => {
   const loading = ref<boolean>(false);
 
   const { toast } = useToast();
+  const auth = useAuth();
   const { saveTicket } = useTickets();
 
   const addToTicket = (item: Item) => {
@@ -48,7 +50,7 @@ export const useCashier = () => {
       items: sellArray.value.map(item => ({ id: item._id, quantity: item.quantity })),
       date: new Date().toISOString(),
       collected: totalToPay.value,
-      user: '60d21b4667d0d8992e610c8a',
+      user: auth.user.value,
     };
 
     if(confirm('Ticket will be saved in the Database')){

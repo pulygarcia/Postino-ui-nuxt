@@ -41,8 +41,7 @@
                   {{formatCurrency(ticket.collected)}}
                 </TableCell>
                 <TableCell class="font-medium uppercase">
-                  Pepito
-                  <!-- {{ticket.user}} Pending: getting employee name -->
+                  {{ticket.user}}
                 </TableCell>
               </TableRow>
             </TableBody>

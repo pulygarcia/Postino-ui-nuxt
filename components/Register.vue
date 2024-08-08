@@ -4,9 +4,9 @@
     import * as z from 'zod'
     import {FormControl,FormDescription,FormField,FormItem,FormLabel,FormMessage} from '@/components/ui/form'
     import { Input } from '@/components/ui/input'
-    import { useToast } from '@/components/ui/toast/use-toast'
+    import {useAuth} from '../composables/useAuth'
 
-    const { toast } = useToast();
+    const auth = useAuth();
 
     const formSchema = toTypedSchema(z.object({
         userName: z.string().min(2).max(50),
@@ -31,34 +31,7 @@
 
       const { repeatPassword, ...valuesToSend } = values;
 
-      try {
-        const response = await fetch('http://localhost:4000/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(valuesToSend)
-        });
-
-        const data = await response.json();
-
-        //send to the catch in order to show an error toast
-        if (!response.ok) {
-          throw new Error(data.msg);
-        }
-
-        toast({
-          title: 'Success',
-          description: data.msg,
-        });
-
-      } catch (error) {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive'
-        });
-      }
+      auth.register(valuesToSend);
 
       form.resetForm();
     })

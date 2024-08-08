@@ -5,8 +5,10 @@
     import {FormControl,FormDescription,FormField,FormItem,FormLabel,FormMessage} from '@/components/ui/form'
     import { Input } from '@/components/ui/input'
     import { useToast } from '@/components/ui/toast/use-toast'
+    import {useAuth} from '../composables/useAuth'
 
     const { toast } = useToast();
+    const auth = useAuth();
 
     const formSchema = toTypedSchema(z.object({
         userName: z.string().min(2).max(50),
@@ -17,42 +19,11 @@
         validationSchema: formSchema,
     })
 
-    const onSubmit = form.handleSubmit(async (values) => {
-        //console.log(values);
-      try {
-        const response = await fetch('http://localhost:4000/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values)
-        });
+    const onSubmit = form.handleSubmit((values) => {
+      //console.log(values);
+      auth.login(values);
 
-        const data = await response.json();
-
-        //send to the catch in order to show an error toast
-        if (!response.ok) {
-          throw new Error(data.msg);
-        }
-
-        //console.log(data);
-
-        toast({
-          title: 'Success',
-          description: 'Welcome ' + values.userName,
-        });
-
-        localStorage.setItem('auth_jwt', data.jwt);
-
-        form.resetForm();
-
-      } catch (error) {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive'
-        });
-      }
+      form.resetForm();
     })
 </script>
 
