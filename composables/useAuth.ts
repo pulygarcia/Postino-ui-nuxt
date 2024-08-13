@@ -15,24 +15,25 @@ type LoginValues = {
 
 export const useAuth = () => {
 
-    const user = ref('');
+    const user = ref(null);
 
-    onMounted( async () => {
-        const token = localStorage.getItem('auth_jwt')
+    onMounted(async () => {
+      const token = localStorage.getItem('auth_jwt');
 
-        try {
-            const response = await fetch('http://localhost:4000/api/auth/user', {
-              method: 'GET',
-              headers: {
-                Authorization: `Bearer ${token}`
-            }
-            });
-            const data = await response.json();
-            user.value = data.userName;
-
+      if (token) {
+          try {
+              const response = await fetch('http://localhost:4000/api/auth/user', {
+                  method: 'GET',
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              });
+              const data = await response.json();
+              user.value = data.userName;
           } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+              console.error('Error fetching user data:', error);
+          }
+      }
     })
 
 
@@ -93,6 +94,8 @@ export const useAuth = () => {
             });
     
             localStorage.setItem('auth_jwt', data.jwt);
+
+            navigateTo('/cashier')
     
     
           } catch (error:any) {
@@ -103,10 +106,22 @@ export const useAuth = () => {
             });
           }
     }
+
+    const logOut = () => {
+      if(confirm('User session will be closed')){
+        localStorage.removeItem('auth_jwt');
+
+        user.value = null;
+
+        navigateTo('/login');
+      }
+    }
+
     
     return{
         register,
         login,
-        user
+        user,
+        logOut
     }
 }
