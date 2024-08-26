@@ -39,6 +39,7 @@ const formSchema = toTypedSchema(z.object({
     salary: z.number().min(50).max(8000),
     phoneNumber: z.number(),
     adress: z.string().min(4).max(30),
+    active: z.boolean(),
 }))
 
 const form = useForm({
@@ -66,7 +67,7 @@ const loadMemberData = async () => {
             formData.active = member.active;
         }
 
-        console.log(member);
+        //console.log(member);
     } catch (error:any) {
         toast({
           title: 'Could not load member data',
@@ -76,21 +77,25 @@ const loadMemberData = async () => {
     }
 }
 
+
 const onSubmit = form.handleSubmit(async (values:any) => {
   //console.log(values);
+
   try {
       await modifyMember(props.memberID, values);
     } catch (error) {
       console.log(error);
+  }finally{
+    //reset visually
+    formData.name = '';
+    formData.charge = '';
+    formData.salary = '';
+    formData.phoneNumber = '';
+    formData.adress = '';
+    formData.active = true;
+    //form.resetForm(); //doesn`t work cuz inputs have fixed values
   }
 
-  //reset visually
-  formData.name = '';
-  formData.charge = '';
-  formData.salary = '';
-  formData.phoneNumber = '';
-  formData.adress = '';
-  //form.resetForm(); //doesn`t work cuz inputs have fixed values
 })
 </script>
 
@@ -158,6 +163,13 @@ const onSubmit = form.handleSubmit(async (values:any) => {
             </FormControl>
             <FormMessage />
         </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="active">
+          <FormItem>
+            <FormLabel>Active?</FormLabel>
+            <input class="ms-1" type="checkbox" v-model="formData.active" :value="formData.active" v-bind="componentField">
+          </FormItem>
         </FormField>
 
         <DialogFooter>

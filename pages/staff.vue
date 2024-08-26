@@ -56,7 +56,7 @@
                 {{member.adress}}
               </TableCell>
               <TableCell class="font-medium capitalize">
-                <Badge 
+                <Badge
                   :class="member.active ? 'bg-green-300 border-green-700 text-green-700' : 'bg-red-300 border-red-700 text-red-700'"
                 >
                   {{member.active ? 'active' : 'inactive'}}
