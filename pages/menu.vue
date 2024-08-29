@@ -9,7 +9,7 @@
   //items composable
   import {useItems} from '../composables/useItems';
 
-  const { searchInput, selectedCategory, filteredItems, uniqueCategories, loading } = useItems();
+  const { searchInput, selectedCategory, filteredItems, uniqueCategories, loading, removeItem } = useItems();
 </script>
 
 <template>
@@ -40,6 +40,8 @@
             </SelectGroup>
           </SelectContent>
         </Select>
+
+        <CreateItemDialog />
       </div>
       <div class="mt-10">
         <Table>
@@ -65,6 +67,14 @@
               <TableCell class="text-right">
                 <DescriptionDialog :itemName="item.name" :itemDescription="item.description" />
               </TableCell>
+              <div class="flex items-center">
+                <TableCell>
+                  <Button @click="removeItem(item._id)" class="bg-red-600 hover:bg-red-500">Delete <Icon  name="mdi:trash" size="20" class="ms-1" /></Button>
+                </TableCell>
+                <TableCell>
+                  <ModifyItemDialog :itemID="item._id" />
+                </TableCell>
+              </div>
             </TableRow>
           </TableBody>
         </Table>

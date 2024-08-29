@@ -26,11 +26,6 @@
             name: 'Earnings history',
             path: '/history',
             icon: 'mdi:history'
-        },
-        {
-            name: 'Settings',
-            path: '/settings',
-            icon: 'mdi:account-settings-variant'
         }
     ]
 

@@ -14,58 +14,47 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import {FormControl,FormDescription,FormField,FormItem,FormLabel,FormMessage} from '@/components/ui/form'
-import {useStaff} from '../composables/useStaff'
+import {useItems} from '../composables/useItems'
 import {useToast} from '../components/ui/toast/use-toast.js'
 
 
 const {toast} = useToast()
 
 const props = defineProps({
-    memberID:{
+    itemID:{
         type: String,
         required: true
     }
 })
 
-const {getMemberById, modifyMember} = useStaff();
+const {getItemById, modifyItem, uniqueCategories} = useItems();
 
 const formSchema = toTypedSchema(z.object({
     name: z.string().min(2).max(50),
-    charge: z.string().min(4).max(25),
-    salary: z.number().min(50).max(8000),
-    phoneNumber: z.number(),
-    adress: z.string().min(4).max(30),
-    active: z.boolean(),
+    description: z.string().min(8).max(120),
+    price: z.number().min(1),
+    category: z.string(),
 }))
 
 const form = useForm({
     validationSchema: formSchema,
 })
 
-const formData = reactive({
-    name: '',
-    charge: '',
-    salary: '',
-    phoneNumber: '',
-    adress: '',
-    active: true
-});
 
-const loadMemberData = async () => {
+const loadItemData = async () => {
     try {
-        const member = await getMemberById(props.memberID);
-        if (member) {
-            form.setValues({
-              name: member.name,
-              charge: member.charge,
-              salary: member.salary,
-              phoneNumber: member.phoneNumber,
-              adress: member.adress,
-              active: member.active
-            })
+        const item = await getItemById(props.itemID);
+        if (item) {
+          //Set these values on each input of vee-validate form, in other way, if you don`t type on each field, it's like they are empty, though they are not visually.
+          form.setValues({
+            name: item.name,
+            description: item.description,
+            price: item.price,
+            category: item.category
+          });
         }
 
-        //console.log(member);
+        //console.log(item);
     } catch (error:any) {
         toast({
           title: 'Could not load member data',
@@ -80,27 +69,27 @@ const onSubmit = form.handleSubmit(async (values:any) => {
   //console.log(values);
 
   try {
-      await modifyMember(props.memberID, values);
+      await modifyItem(props.itemID, values);
+
     } catch (error) {
       console.log(error);
   }finally{
     //reset visually
     form.resetForm();
   }
-
 })
 </script>
 
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button @click="loadMemberData" class="bg-blue-600 hover:bg-blue-400">
+      <Button @click="loadItemData" class="bg-blue-600 hover:bg-blue-400">
         Update <Icon  name="mdi:pencil" size="20" />
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Update a Staff member</DialogTitle>
+        <DialogTitle>Update a Menu item</DialogTitle>
         <DialogDescription>
           Modify data as you want
         </DialogDescription>
@@ -117,51 +106,49 @@ const onSubmit = form.handleSubmit(async (values:any) => {
         </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="charge">
+        <FormField v-slot="{ componentField }" name="description">
         <FormItem>
-            <FormLabel>Charge</FormLabel>
+            <FormLabel>Description</FormLabel>
             <FormControl>
-            <Input type="text" placeholder="dishwasher" :value="form.values.charge" v-bind="componentField" />
+            <Input type="text" placeholder="dishwasher" :value="form.values.description" v-bind="componentField" />
             </FormControl>
             <FormMessage />
         </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="salary">
+        <FormField v-slot="{ componentField }" name="price">
         <FormItem>
-            <FormLabel>Salary p/month</FormLabel>
+            <FormLabel>Price</FormLabel>
             <FormControl>
-            <Input type="number" placeholder="1000" :value="form.values.salary" v-bind="componentField" />
+            <Input type="number" placeholder="1000" :value="form.values.price" v-bind="componentField" />
             </FormControl>
             <FormMessage />
         </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="phoneNumber">
+        <FormField v-slot="{ componentField }" name="category">
         <FormItem>
-            <FormLabel>Phone number</FormLabel>
+            <FormLabel>Category</FormLabel>
             <FormControl>
-            <Input type="number" placeholder="1000" :value="form.values.phoneNumber" v-bind="componentField" />
+                <Select v-bind="componentField" :value="form.values.category">
+                    <SelectTrigger class="w-[180px]">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                        <SelectItem 
+                            v-for="category in uniqueCategories" 
+                            :key="category" 
+                            :value="category"
+                        >
+                            {{category}}
+                        </SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </FormControl>
             <FormMessage />
         </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ componentField }" name="adress">
-        <FormItem>
-            <FormLabel>Adress</FormLabel>
-            <FormControl>
-            <Input type="text" placeholder="avellaneda 362" :value="form.values.adress" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-        </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ componentField }" name="active">
-          <FormItem>
-            <FormLabel>Active?</FormLabel>
-            <input class="ms-1" type="checkbox" v-model="form.values.active" :value="form.values.active" v-bind="componentField">
-          </FormItem>
         </FormField>
 
         <DialogFooter>

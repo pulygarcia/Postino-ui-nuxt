@@ -15,7 +15,7 @@
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button class="bg-blue-500 hover:bg-blue-400">Description</Button>
+            <Button class="bg-teal-500 hover:bg-teal-400">Description <Icon name="mdi:checkbook" size="29"class="ms-1" /></Button>
         </DialogTrigger>
         <DialogContent class="sm:max-w-md">
             <DialogHeader>
