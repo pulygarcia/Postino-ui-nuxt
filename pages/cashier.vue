@@ -78,7 +78,7 @@
       <div>
         <div class="flex gap-2 items-center mb-2">
           <div class="bg-blue-200 px-1 py-2 inline-block rounded-md">
-            <p v-if="user" class="capitalize font-semibold">employee: <span class="uppercase font-bold ms-1">{{ user }}</span></p>
+            <p v-if="user" class="capitalize font-semibold">employee: <span class="uppercase font-bold ms-1">{{ user.userName }}</span></p>
           </div>
 
           <Button @click="logOut" class="py-1 bg-red-500 hover:bg-red-700">Log out <Icon name="mdi:logout" size="20" class="ms-1" /></Button>

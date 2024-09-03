@@ -9,8 +9,10 @@
 
   //members composable
   import {useStaff} from '../composables/useStaff';
+  import {useAuth} from '../composables/useAuth';
 
   const { searchInput, filteredMembers, deleteMember } = useStaff();
+  const { isAdmin } = useAuth();
 </script>
 
 <template>
@@ -23,7 +25,7 @@
           <Input id="search" type="text" placeholder="Search..." class="pl-10" v-model="searchInput" />
         </Search>
 
-        <AddMemberDialog />
+        <AddMemberDialog v-if="isAdmin"/>
       </div>
       <div class="mt-10">
         <Table>
@@ -36,6 +38,7 @@
               <TableHead>Phone number</TableHead>
               <TableHead>Adress</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -47,7 +50,7 @@
                 {{member.charge}}
               </TableCell>
               <TableCell class="font-medium">
-                {{formatCurrency(member.salary)}}
+                {{isAdmin ? formatCurrency(member.salary) : '*****'}}
               </TableCell>
               <TableCell class="font-medium">
                 {{member.phoneNumber}}
@@ -62,7 +65,7 @@
                   {{member.active ? 'active' : 'inactive'}}
                 </Badge>
               </TableCell>
-              <TableCell class="text-right flex gap-2">
+              <TableCell v-if="isAdmin" class="text-right flex gap-2">
                 <Button @click="deleteMember(member._id)" class="bg-red-600 hover:bg-red-500">Delete <Icon name="mdi:trash" class="ms-1" /></Button>
                 <ModifyMemberDialog :memberID="member._id" />
               </TableCell>

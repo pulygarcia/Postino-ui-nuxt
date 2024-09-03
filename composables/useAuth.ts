@@ -15,7 +15,7 @@ type LoginValues = {
 
 export const useAuth = () => {
 
-    const user = ref(null);
+    const user = ref<{ admin?: boolean } | null>(null);
 
     onMounted(async () => {
       const token = localStorage.getItem('auth_jwt');
@@ -29,7 +29,7 @@ export const useAuth = () => {
                   },
               });
               const data = await response.json();
-              user.value = data.userName;
+              user.value = data;
           } catch (error) {
               console.error('Error fetching user data:', error);
           }
@@ -117,11 +117,16 @@ export const useAuth = () => {
       }
     }
 
+    const isAdmin = computed(() => {
+      return user.value?.admin == true
+    })
+
     
     return{
         register,
         login,
         user,
-        logOut
+        logOut,
+        isAdmin
     }
 }
