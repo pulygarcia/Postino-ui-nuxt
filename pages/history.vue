@@ -41,7 +41,7 @@
                   {{formatCurrency(ticket.collected)}}
                 </TableCell>
                 <TableCell class="font-medium uppercase">
-                  {{ticket.user}}
+                  {{ticket.user.userName}}
                 </TableCell>
               </TableRow>
             </TableBody>

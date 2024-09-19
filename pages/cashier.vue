@@ -7,11 +7,13 @@
 
   import {useItems} from '../composables/useItems';
   import {useCashier} from '../composables/useCashier';
+  import {useTickets} from '../composables/useTickets';
   import {useAuth} from '../composables/useAuth';
   
   const { searchInput, selectedCategory, filteredItems, uniqueCategories, loading:loadingItems } = useItems();
   const { addToTicket, removeFromTicket, totalToPay, sellArray, registerSale, loading } = useCashier();
   const { user, logOut } = useAuth();
+  const { todayEarnings } = useTickets();
 
   definePageMeta({
     middleware: 'auth'
@@ -99,12 +101,12 @@
               </Button>
             </article>
             <hr class="my-4 border-t border-gray-300" />
-            <!-- Total a pagar -->
+            <!-- Total to pay -->
             <div class="text-center">
               <p class="text-xl font-semibold">Total to Pay</p>
               <p class="text-2xl font-bold">{{ formatCurrency(totalToPay) }}</p>
             </div>
-            <!-- Botón "Registrar Venta" -->
+            <!-- Register sale -->
             <div class="flex justify-center mt-6">
               <Button @click="registerSale()" type="button" class="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-md">
                 Register Sale
@@ -115,8 +117,15 @@
             <img src="../public/ticket.svg" alt="ticket icon" class="w-36 mx-auto mt-20">
             <p class="text-center mt-4">Start adding items to the ticket</p>
           </div>
+
         </div>
-            </div>
+
+        <div class="shadow-lg p-4 rounded-lg mt-4">
+
+          <p class="text-xl">Earnings of the Day: <span class="text-blue-400 font-bold text-2xl">{{formatCurrency(todayEarnings)}}</span></p>
+        </div>
+
+          </div>
       </div>
   </Container>
 </template>
