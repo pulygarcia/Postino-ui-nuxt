@@ -27,7 +27,7 @@
       <DialogHeader>
         <DialogTitle class="mb-3 text-lg">{{ formatDate(details.date) }}</DialogTitle>
         <DialogDescription class="space-y-6">
-            <p class="font-semibold">Employee: <span class="text-black uppercase">{{details.user}}</span></p>
+            <p class="font-semibold">Employee: <span class="text-black uppercase">{{details.user.userName}}</span></p>
             <div>
               <p class="font-semibold text-lg">Consumed</p>
               <ul>
